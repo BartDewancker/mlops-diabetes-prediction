@@ -1,0 +1,17 @@
+# nodeport-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "example.fullname" . }}
+  labels:
+{{ include "example.labels" . | indent 4 }}
+  namespace: mlops-diabetes
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      nodePort: {{ .Values.service.nodePort }}

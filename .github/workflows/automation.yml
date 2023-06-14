@@ -1,0 +1,19 @@
+name: MLOps Automation
+
+on:
+  push:
+    branches: [ master ]
+ 
+jobs:
+  start:
+    uses: ./.github/workflows/azure-ai.yml
+    with:
+      data_prep: false
+      ai_training: false
+      api_creation: true
+      api_deployment: true
+      process_images: true
+      split_images: true
+      train_on_local: false
+      local_deployment: true
+    secrets: inherit
