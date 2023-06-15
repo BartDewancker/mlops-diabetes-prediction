@@ -189,7 +189,6 @@ jobs:
           python steps/03_Deployment.py
 
       - name: Upload API Code for Docker
-        if: inputs.local_deployment
         uses: actions/upload-artifact@v2
         with:
           name: docker-config

@@ -8,8 +8,8 @@ jobs:
   start:
     uses: ./.github/workflows/azure-ai.yml
     with:
-      data_prep: true
-      ai_training: true
+      data_prep: false
+      ai_training: false
       api_creation: true
       api_deployment: true
     secrets: inherit
