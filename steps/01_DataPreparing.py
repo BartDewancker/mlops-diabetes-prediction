@@ -95,9 +95,8 @@ def checkDatasheets(ws):
 
     # Upload the directory with the checked datasheets as a new dataset.
     print(f'Uploading checked datasheets to {CHECKED_DATASET}')
-    print(f'checked_data_folder: {checked_data_folder}')
-    checked_datasheets = Dataset.File.upload_directory(src_dir = checked_data_folder,
-                                                       target = DataPath(datastore=ws.get_default_datastore(), path_on_datastore=f'processed_data/checked'),
+    checked_datasheets = Dataset.File.upload_directory(src_dir=checked_data_folder,
+                                                       target=DataPath(datastore=ws.get_default_datastore(), path_on_datastore=f'processed_data/checked'),
                                                        overwrite=True)
 
     # Register the checked datasheets as a new dataset.
