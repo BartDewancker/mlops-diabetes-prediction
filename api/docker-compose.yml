@@ -1,0 +1,9 @@
+services:
+    diabetes-api:
+        build: # Make sure to build the Docker image if it does not exist ...
+            context: .
+        image: diabetes-prediction:v1
+        ports: # Enter a list of all the ports that should be mapped
+            - 8090:80 # Map port 8090 on our VIRTUAL MACHINE to port 80 on our DOCKER CONTAINER
+        env_file:
+            - .env

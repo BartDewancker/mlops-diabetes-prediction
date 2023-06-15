@@ -1,2 +1,4 @@
 steps/outputs/*
 steps/__pycache__/*
+api/app/__pycache__/*
+api/app/outputs/*

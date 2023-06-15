@@ -14,7 +14,6 @@ from sklearn.pipeline import Pipeline
 # This AzureML package will allow to log our metrics etc.
 from azureml.core import Run
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--train-folder', type=str, dest='train_folder', help='Train folder mounting point.')
 parser.add_argument('--test-folder', type=str, dest='test_folder', help='Test folder mounting point.')
@@ -148,7 +147,7 @@ if(not df_train.empty and not df_test.empty):
     print(f'Classification report: \n{classification_report(y_test, y_pred)}')
 
 
-    # Create an output directory where our AI model will be saved to.
+# Create an output directory where our AI model will be saved to.
 # Everything inside the `outputs` directory will be logged and kept aside for later usage.
 model_path = os.path.join('outputs', args.model_name)
 os.makedirs(model_path, exist_ok=True)
@@ -156,7 +155,7 @@ os.makedirs(model_path, exist_ok=True)
 # save model in the outputs folder so it automatically get uploaded
 
 model_filename = os.path.join(model_path, 
-    f'pipeline_logistic_regression_C{c:.5f}_solver_{solver}_class_weight_balanced')
+    f'pipeline_logistic_regression.pkl')
 joblib.dump(value=model, filename=model_filename)
 print(f"Model saved at {model_filename}")
 

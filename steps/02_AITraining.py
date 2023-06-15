@@ -62,9 +62,8 @@ def prepareEnvironment(ws):
     # Create an Environment name for later use
     environment_name = os.environ.get('TRAINING_ENV_NAME')
    
-
     env = Environment.from_conda_specification(environment_name, file_path = CONDA_DEPENDENCIES)
-    # env.python.user_managed_dependencies = True # False when training on local machine, otherwise True.
+    #env.python.user_managed_dependencies = False # False when training on local machine, otherwise True.
     
     # Register environment to re-use later
     env.register(workspace = ws)

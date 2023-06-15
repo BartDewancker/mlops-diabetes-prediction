@@ -33,6 +33,7 @@ pure-eval==0.2.2
 Pygments==2.15.1
 pyparsing==3.0.9
 python-dateutil==2.8.2
+pytest==6.2.5
 pytz==2023.3
 pywin32==306
 pyzmq==25.1.0
@@ -52,3 +53,8 @@ azureml-sdk
 python-dotenv==0.19.2
 azure-ai-ml
 azure-identity
+fastapi>=0.68.0,<0.69.0
+pydantic>=1.8.0,<2.0.0
+uvicorn>=0.15.0,<0.16.0
+python-multipart==0.0.5
+requests==2.27.1
