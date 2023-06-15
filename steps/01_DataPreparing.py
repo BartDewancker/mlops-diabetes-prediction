@@ -2,6 +2,7 @@ from glob import glob
 import os
 from datetime import datetime
 import shutil
+from sys import version
 import pandas as pd
 
 from utils import connectWithAzure
@@ -23,8 +24,9 @@ CHECKED_DATASET = os.environ.get('CHECKED_DATASET_NAME')
 TEST_DATASET = os.environ.get('TEST_DATASET_NAME')
 TRAIN_DATASET = os.environ.get('TRAIN_DATASET_NAME')
 
-RAW_DATASHEET = os.environ.get('RAW_DATASHEET_NAME')
-CHECKED_DATASHEET = os.environ.get('CHECKED_DATASHEET_NAME')
+DATASET_VERSION = os.environ.get('DATASET_VERSION')
+
+GIT_SHA = os.environ.get('GIT_SHA')
 
 # Path to store the downloaded dataset = data
 data_folder = os.path.join(os.getcwd(), 'data')
@@ -44,7 +46,7 @@ def checkDatasheets(ws):
     os.makedirs(checked_data_folder, exist_ok=True)
     
     print(f'Downloading dataset with raw datasheets: {RAW_DATASET}')
-    dataset = Dataset.get_by_name(ws, f'{RAW_DATASET}')
+    dataset = Dataset.get_by_name(ws, RAW_DATASET, version = DATASET_VERSION)
     dataset.download(data_folder, overwrite=True)
 
     datasheets = glob(f"{data_folder}/*.csv")
@@ -100,7 +102,7 @@ def checkDatasheets(ws):
     # Register the checked datasheets as a new dataset.
     new_dataset = checked_datasheets.register(ws, name = CHECKED_DATASET,
                                               description =  f'Datasheets that have been checked for missing values, duplicates and unique values.',
-                                              tags={'Dataset raw data': RAW_DATASET, 'AI-Model': 'LogisticRegression', 'GIT-SHA': os.environ.get('GIT_SHA')},
+                                              tags={'Dataset raw data': RAW_DATASET, 'AI-Model': 'LogisticRegression', 'GIT_SHA': GIT_SHA},
                                               create_new_version=True)
     
     print(f"Dataset id {new_dataset.id} | Dataset version {new_dataset.version}")
@@ -115,7 +117,7 @@ def splitDatasheets(ws):
     os.makedirs(train_data_folder, exist_ok=True)
     
     print(f'Downloading dataset {CHECKED_DATASET}')
-    dataset = Dataset.get_by_name(ws, f'{CHECKED_DATASET}')
+    dataset = Dataset.get_by_name(ws, CHECKED_DATASET, version = DATASET_VERSION)
     dataset.download(data_folder, overwrite=True)
 
     datasheets = glob(f"{data_folder}/*.csv")
@@ -161,7 +163,7 @@ def splitDatasheets(ws):
     # Register the train datasheets as a new dataset.
     train_dataset = train_datasheets.register(ws, name = TRAIN_DATASET,
                                               description =  f'Datasheets for training the model.',
-                                              tags={'Dataset train data': TRAIN_DATASET, 'AI-Model': 'LogisticRegression', 'GIT-SHA': os.environ.get('GIT_SHA')},
+                                              tags={'Dataset train data': TRAIN_DATASET, 'AI-Model': 'LogisticRegression', 'GIT_SHA': GIT_SHA},
                                               create_new_version=True)
     
     print(f"Dataset id {train_dataset.id} | Dataset version {train_dataset.version}")
@@ -174,7 +176,7 @@ def splitDatasheets(ws):
     # Register the train datasheets as a new dataset.
     test_dataset = test_datasheets.register(ws, name = TEST_DATASET,
                                             description =  f'Datasheets for testing the model.',
-                                            tags={'Dataset test data': TEST_DATASET, 'AI-Model': 'LogisticRegression', 'GIT-SHA': os.environ.get('GIT_SHA')},
+                                            tags={'Dataset test data': TEST_DATASET, 'AI-Model': 'LogisticRegression', 'GIT_SHA': GIT_SHA},
                                             create_new_version=True)
     
     print(f"Dataset id {test_dataset.id} | Dataset version {test_dataset.version}")
@@ -189,7 +191,7 @@ def main():
     print('Processing the datasheets')
     checkDatasheets(ws)
    
-    print('Splitting the datasheet entries')
+    # print('Splitting the datasheet entries')
     splitDatasheets(ws)
 
 if __name__ == '__main__':

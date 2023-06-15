@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: MLOps Azure Data Preparing and AI Training
 
 # Controls when the workflow will run
@@ -27,35 +25,15 @@ on:
           type: boolean
           default: true
           required: true
-      process_images:
-        description: 'Check to skip the processing of the original datasheet file'
-        type: boolean
-        default: true
-        required: true
-      split_images:
-        description: 'Check to skip the Splitting of the Training and Testing sets'
-        type: boolean
-        default: true
-        required: true
-      train_on_local:
-        description: 'Should we train the AI model on the runner? Otherwise we train on Azure cloud machine'
-        type: boolean
-        default: false
-        required: true
-      local_deployment:
-        description: 'Check if we should deploy the API locally later on.'
-        type: boolean
-        default: false
-        required: true
-
+      
   workflow_dispatch:
     branches: [ master ]
     inputs:
       data_prep:
         description: 'Data preparing'
         type: boolean
-        required: true
         default: true
+        required: true
       ai_training:
         description: 'AI Training'
         type: boolean
@@ -67,32 +45,11 @@ on:
         default: true
         required: true
       api_deployment:
-        description: 'API Deployment'
-        type: boolean
-        default: true
-        required: true
-      process_images:
-        description: 'Check to skip the processing of the original datasheet file'
-        type: boolean
-        default: true
-        required: true
-      split_images:
-        description: 'Check to skip the Splitting of the Training and Testing sets'
-        type: boolean
-        default: true
-        required: true
-      train_on_local:
-        description: 'Should we train the AI model on the runner? Otherwise we train on Azure cloud machine'
-        type: boolean
-        default: false
-        required: true
-      local_deployment:
-        description: 'Check if we should deploy the API locally later on.'
-        type: boolean
-        default: false
-        required: true
+          description: 'API Deployment'
+          type: boolean
+          default: true
+          required: true
     
-
 env:
   CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
 
@@ -102,35 +59,28 @@ env:
   RESOURCE_GROUP: mlops-bart
   SUBSCRIPTION_ID: 412afafd-c7eb-488d-b2fc-cc920cc0087a
 
-  TRAIN_SET_NAME: diabetes-training-set
-  TEST_SET_NAME: diabetes-testing-set
   MODEL_NAME: diabetes-prediction-model
 
-  SCRIPT_FOLDER: scripts
-
-  RANDOM_SEED: 42 # Random values that should be same for all the steps
+  RAW_DATASET_NAME: patients_healthdata
+  CHECKED_DATASET_NAME: patients_healthdata_checked
+  TRAIN_DATASET_NAME: patients_healthdata_train
+  TEST_DATASET_NAME: patients_healthdata_test
+  DATASET_VERSION: 1
 
   WORKDIR: ${{github.workspace}}
   GIT_SHA: ${{ github.sha }} # Set the SHA to use in the code
   
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
   data-preparing:
-    ## Note: Uncomment this if you are activating the previous job called 'dependencies'.
-    # needs: [dependencies] # Wait until this job was finished.
     if: ${{ inputs.data_prep }}
-    # The type of runner that the job will run on
+  
     runs-on: ubuntu-20.04 # Because of issues with dotnet, we downgraded this one
-    # runs-on: self-hosted
-
+   
     env:
-      DATA_FOLDER: data
-      DATASET_VERSION: 'latest'
+      RANDOM_SEED: 42
       TRAIN_TEST_SPLIT_FACTOR: 0.20
-      PROCESS_IMAGES: ${{ inputs.process_images }} # Make the pipeline skip processing the images
-      SPLIT_IMAGES: ${{ inputs.skip_images }} # Make the pipeline skip splitting the images
-
+  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -164,23 +114,21 @@ jobs:
     # runs-on: self-hosted
 
     env:
-      INITIAL_LEARNING_RATE: 0.01
-      MAX_EPOCHS: 2
-      BATCH_SIZE: 32
-      PATIENCE: 11
-      EXPERIMENT_NAME: animal-classification
+      EXPERIMENT_NAME: diabetes-prediction-experiment
+      SCRIPT_FOLDER: ../scripts
 
       ## Compute cluster parts
-      AML_COMPUTE_CLUSTER_NAME: nathan-cpu-cluster
-      AML_COMPUTE_CLUSTER_MIN_NODES: 1
+      AML_COMPUTE_CLUSTER_NAME: cpu-cluster
+      AML_COMPUTE_CLUSTER_MIN_NODES: 0
       AML_COMPUTE_CLISTER_MAX_NODES: 4
       AML_COMPUTE_CLUSTER_SKU: STANDARD_D2_V2
 
-      TRAIN_ON_LOCAL: ${{ inputs.train_on_local }} # If you want to train on your local runner, set this to True.
-
       ## Training environment
-      CONDA_DEPENDENCIES_PATH: conda_dependencies.yml
-      TRAINING_ENV_NAME: animals-classification-env-training
+      CONDA_DEPENDENCIES_PATH: ../conda_dependencies.yml
+      TRAINING_ENV_NAME: diabetes-prediction-env-training
+
+      TRAIN_DATASHEET_NAME: patients_healthdata_1_train.csv
+      TEST_DATASHEET_NAME: patients_healthdata_1_test.csv
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -203,7 +151,6 @@ jobs:
         run: |
           python steps/02_AITraining.py
 
-
   api-creation:
     needs: [data-preparing, ai-training]
     # This will run Always BUT only when the previous two jobs were successful or skipped && the api_creation flag is set to true.
@@ -214,15 +161,10 @@ jobs:
         inputs.api_creation
       }}
     runs-on: ubuntu-latest
-    # runs-on: self-hosted
-
+   
     env:
-      DEPLOYMENT_DEPENDENCIES: deployment_environment.yml
-      DEPLOYMENT_ENV_NAME: animals-classification-env-deployment
-      SCORE_SERVICE_NAME: animals-classification-svc
-      LOCAL_MODEL_PATH: api/outputs
-      LOCAL_DEPLOYMENT: ${{ inputs.local_deployment }}
-
+      LOCAL_MODEL_PATH: api/app/outputs
+      
     steps:
       - uses: actions/checkout@v2
       
@@ -235,7 +177,6 @@ jobs:
       - name: 'install requirements'
         run: pip install -r requirements.txt
         working-directory: ${{ env.WORKDIR }}
-
 
       - name: 'Run deployment script'
         id: deployment
@@ -252,15 +193,13 @@ jobs:
 
   docker-build-and-push:
     needs: [api-creation]
-    # This will run Always BUT only when the previous two jobs were successful or skipped && the local_deployment flag is set to true.
+    
     if: ${{
         always() &&
-        (needs.api-creation.result == 'success' || needs.api-creation.result == 'skipped') &&
-        inputs.local_deployment
+        (needs.api-creation.result == 'success' || needs.api-creation.result == 'skipped')
       }}
     runs-on: ubuntu-latest
-    # runs-on: self-hosted
-
+   
     steps:
       - name: Download docker-config artifact
         uses: actions/download-artifact@v2
@@ -273,7 +212,7 @@ jobs:
         with: 
           # list of Docker images to use as base name for tags
           images: |
-            docker.io/bartdewa/animal-classification
+            docker.io/bartdewa/diabetes-prediction
           # generate Docker tags based on the following events/attributes:
           # The GitHub Branch
           # The GitHub SHA
@@ -300,28 +239,20 @@ jobs:
         
   docker-pull-and-deploy:
     needs: [docker-build-and-push]
-    # This will run Always BUT only when the previous two jobs were successful or skipped && the local_deployment flag is set to true.
+  
     if: ${{
         always() &&
-        (needs.docker-build-and-push.result == 'success' || needs.docker-build-and-push == 'skipped') &&
-        inputs.local_deployment
+        (needs.docker-build-and-push.result == 'success' || needs.docker-build-and-push == 'skipped')
       }}
     runs-on: self-hosted
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: Create namespace
         continue-on-error: true  
-        run: kubectl create namespace bartdewa-animals
-
-      # Runs a set of commands using the runners shell
-      # - name: Apply service
-      #   run: kubectl apply -f animal-classification-service.yaml
-      #        kubectl apply -f .\animal-classification-deployment.yaml
-      #   working-directory: ${{ env.WORKDIR }}
+        run: kubectl create namespace diabetes-prediction
 
       - name: Get short SHA
         run: echo "SHORT_SHA=sha-$("${{ github.sha }}".SubString(0, 7))" >> $env:GITHUB_ENV
@@ -330,7 +261,7 @@ jobs:
         run: echo "Short SHA is ${{ env.SHORT_SHA }}"
                        
       - name: Start deployment
-        run: helm upgrade --install animals ./helm --set image.tag=${{ env.SHORT_SHA }} 
+        run: helm upgrade --install diabetes-prediction ./helm --set image.tag=${{ env.SHORT_SHA }} 
         working-directory: ${{ env.WORKDIR }}
 
 

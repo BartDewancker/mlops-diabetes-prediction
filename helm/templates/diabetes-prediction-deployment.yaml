@@ -1,11 +1,10 @@
-# Kubernetes deploment for nginx ghcr.io/nathansegers/gh-actions-nginx:1.0.0
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "example.fullname" . }}
   labels:
 {{ include "example.labels" . | indent 4 }}
-  namespace: mlops-diabetes
+  namespace: diabetes-prediction
 spec:
   selector:
     matchLabels:

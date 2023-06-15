@@ -1,0 +1,23 @@
+# anima-classification Kubernetes deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diabetes-prediction
+  namespace: diabetes-prediction
+  labels:
+    app: diabetes-prediction-api
+spec:
+  selector:
+    matchLabels:
+      app: diabetes-prediction-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: diabetes-prediction-api
+    spec:
+      containers:
+        - name: api-container
+          image: docker.io/bartdewa/diabetes-prediction:v1
+          ports:
+          - containerPort: 80

@@ -20,11 +20,13 @@ TRAIN_DATASET = os.environ.get('TRAIN_DATASET_NAME')
 TEST_DATASET = os.environ.get('TEST_DATASET_NAME')
 TRAIN_DATASHEET = os.environ.get('TRAIN_DATASHEET_NAME')
 TEST_DATASHEET = os.environ.get('TEST_DATASHEET_NAME')
+DATASET_VERSION = os.environ.get('DATASET_VERSION')
 
 CONDA_DEPENDENCIES = os.environ.get('CONDA_DEPENDENCIES_PATH')
 
 EXPERIMENT = os.environ.get('EXPERIMENT_NAME')
 SCRIPTFOLDER = os.environ.get('SCRIPT_FOLDER')
+TRAINING_ENV = os.environ.get('TRAINING_ENV_NAME')
     
 COMPUTE_NAME = os.environ.get("AML_COMPUTE_CLUSTER_NAME", "cpu-cluster")
 COMPUTE_MIN_NODES = int(os.environ.get("AML_COMPUTE_CLUSTER_MIN_NODES", 0))
@@ -32,6 +34,8 @@ COMPUTE_MAX_NODES = int(os.environ.get("AML_COMPUTE_CLUSTER_MAX_NODES", 4))
 
 # This example uses CPU VM. For using GPU VM, set SKU to STANDARD_NC6
 VM_SIZE = os.environ.get("AML_COMPUTE_CLUSTER_SKU", "STANDARD_D2_V2")
+
+GIT_SHA = os.environ.get('GIT_SHA')
 
 def prepareComputeCluster(ws):
     
@@ -60,7 +64,7 @@ def prepareComputeCluster(ws):
 def prepareEnvironment(ws):
 
     # Create an Environment name for later use
-    environment_name = os.environ.get('TRAINING_ENV_NAME')
+    environment_name = TRAINING_ENV
    
     env = Environment.from_conda_specification(environment_name, file_path = CONDA_DEPENDENCIES)
     #env.python.user_managed_dependencies = False # False when training on local machine, otherwise True.
@@ -75,12 +79,13 @@ def prepareTraining(ws, env, compute_target) -> Tuple[Experiment, ScriptRunConfi
     # Create a new experiment.
     exp = Experiment(workspace=ws, name=EXPERIMENT)
 
-    datasets = Dataset.get_all(workspace=ws) # Get all the datasets
+    train_dataset = Dataset.get_by_name(ws, TRAIN_DATASET, version = DATASET_VERSION)
+    test_dataset = Dataset.get_by_name(ws, TEST_DATASET, version = DATASET_VERSION)
 
     args = [
         # You can set these to .as_mount() when not training on local machines, but this should also work.
-    '--train-folder', datasets[TRAIN_DATASET].as_download('./processed_data/train'),
-    '--test-folder', datasets[TEST_DATASET].as_download('./processed_data/test'),
+    '--train-folder', train_dataset.as_download('./processed_data/train'),
+    '--test-folder', test_dataset.as_download('./processed_data/test'),
     '--train-datasheet', TRAIN_DATASHEET,
     '--test-datasheet', TEST_DATASHEET,
     '--model-name', MODEL_NAME]
@@ -96,13 +101,13 @@ def downloadAndRegisterModel(ws, run):
 
     model_path = 'outputs/' + MODEL_NAME
 
-    datasets = Dataset.get_all(workspace=ws)
-   
+    test_dataset = Dataset.get_by_name(ws, TEST_DATASET, version = DATASET_VERSION)
+      
     run.download_files(prefix=model_path)
     run.register_model(MODEL_NAME, model_path=model_path,
-                      tags={'Patiens health data': TRAIN_DATASET, 'AI-Model': 'LogisticRegression', 'GIT_SHA': os.environ.get('GIT_SHA')},
-                      description="Diabetes prediction",
-                      sample_input_dataset=datasets[TEST_DATASET])
+                       tags={'Patiens health data': TRAIN_DATASET, 'AI-Model': 'LogisticRegression', 'GIT_SHA': GIT_SHA},
+                       description="Diabetes prediction",
+                       sample_input_dataset=test_dataset)
 
 def main():
 

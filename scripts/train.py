@@ -154,8 +154,8 @@ os.makedirs(model_path, exist_ok=True)
 
 # save model in the outputs folder so it automatically get uploaded
 
-model_filename = os.path.join(model_path, 
-    f'pipeline_logistic_regression.pkl')
+model_filename = os.path.join(model_path, f'pipeline_logistic_regression.pkl')
+
 joblib.dump(value=model, filename=model_filename)
 print(f"Model saved at {model_filename}")
 

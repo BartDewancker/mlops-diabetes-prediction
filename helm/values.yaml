@@ -2,13 +2,13 @@ replicaCount: 1
 
 image:
   repository: docker.io/bartdewa/diabetes-prediction
-  tag: sha-4ddb715
+  tag: v1
   pullPolicy: IfNotPresent
 
 service:
   type: NodePort
   port: 8090
   targetPort: 80
-  nodePort: 30033
+  nodePort: 30012
 
 randomname: default-name
