@@ -267,7 +267,7 @@ jobs:
         run: echo "Short SHA is ${{ env.SHORT_SHA }}"
                        
       - name: Start deployment
-        run: helm upgrade --install diabetes-prediction ./helm --set image.tag=${{ env.SHORT_SHA }} 
+        run: helm upgrade --install diabetes-prediction ./helm --set image.tag=${{ env.SHORT_SHA }} -n diabetes-prediction
         working-directory: ${{ env.WORKDIR }}
 
 

@@ -35,6 +35,8 @@ vanuit de folder mlops-diabetes-prediction
 
 helm install diabetes-prediction ./helm
 
+helm upgrade --install diabetes-prediction ./helm --set image.tag=sha-069e129 -n diabetes-prediction
+
 # wissen van een chart
 helm delete <chart-name>
 
