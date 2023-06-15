@@ -44,7 +44,6 @@ def patient_to_sample(patient: Patient, model: BaseEstimator) -> pd.DataFrame:
     categorical_features = preprocessor.transformers[1][2]
 
     options_per_feature = preprocessor.named_transformers_['cat'].named_steps['onehot'].categories_
-    options_per_feature = preprocessor.named_transformers_['cat'].categories_
     for feature, options in zip(categorical_features, options_per_feature):
         if not getattr(patient, feature) in options:
             raise ValueError(
