@@ -95,6 +95,10 @@ jobs:
       - name: 'install requirements'
         run: pip install -r requirements.txt
         working-directory: ${{ env.WORKDIR }}
+
+      - name: 'Print working directory'
+        run: |
+           echo "Working directory: ${{ env.WORKDIR }}"
           
       - name: 'Run data prep script'
         id: dataprep
@@ -193,10 +197,13 @@ jobs:
 
   docker-build-and-push:
     needs: [api-creation]
-    
+
     if: ${{
         always() &&
-        (needs.api-creation.result == 'success' || needs.api-creation.result == 'skipped')
+        (needs.data-preparing.result == 'success' || needs.data-preparing.result == 'skipped') &&
+        (needs.ai-training.result == 'success' || needs.ai-training.result == 'skipped') &&
+        (needs.api-creation.result == 'success' || needs.api-creation.result == 'skipped') &&
+        inputs.api_creation
       }}
     runs-on: ubuntu-latest
    
