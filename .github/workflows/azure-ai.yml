@@ -119,7 +119,7 @@ jobs:
 
     env:
       EXPERIMENT_NAME: diabetes-prediction-experiment
-      SCRIPT_FOLDER: ../scripts
+      SCRIPT_FOLDER: scripts
 
       ## Compute cluster parts
       AML_COMPUTE_CLUSTER_NAME: cpu-cluster
@@ -128,7 +128,7 @@ jobs:
       AML_COMPUTE_CLUSTER_SKU: STANDARD_D2_V2
 
       ## Training environment
-      CONDA_DEPENDENCIES_PATH: ../conda_dependencies.yml
+      CONDA_DEPENDENCIES_PATH: conda_dependencies.yml
       TRAINING_ENV_NAME: diabetes-prediction-env-training
 
       TRAIN_DATASHEET_NAME: patients_healthdata_1_train.csv
