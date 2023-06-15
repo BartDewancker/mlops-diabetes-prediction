@@ -252,13 +252,16 @@ jobs:
       }}
     runs-on: self-hosted
 
+    env:
+      NAME_SPACE: diabetes-prediction
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: Create namespace
         continue-on-error: true  
-        run: kubectl create namespace diabetes-prediction
+        run: kubectl create namespace ${{ env.NAME_SPACE }}
 
       - name: Get short SHA
         run: echo "SHORT_SHA=sha-$("${{ github.sha }}".SubString(0, 7))" >> $env:GITHUB_ENV
@@ -267,7 +270,7 @@ jobs:
         run: echo "Short SHA is ${{ env.SHORT_SHA }}"
                        
       - name: Start deployment
-        run: helm upgrade --install diabetes-prediction ./helm --set image.tag=${{ env.SHORT_SHA }} -n diabetes-prediction
+        run: helm upgrade --install diabetes-prediction ./helm --set image.tag=${{ env.SHORT_SHA }} -n ${{ env.NAME_SPACE }}
         working-directory: ${{ env.WORKDIR }}
 
 
