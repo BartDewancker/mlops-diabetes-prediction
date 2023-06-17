@@ -57,10 +57,12 @@ az login
 az configure --defaults group=mlops-bart workspace=diabetes-prediction-v2
 
 az ml compute create --file compute.yml
-az ml environment create --file diabetes-prediction-env.yml
+az ml environment create --file diabetes-prediction-env.yml --version 3
 
 az ml component create --file datacheck.yml
 az ml component create --file datasplit.yml
 az ml component create --file training.yml
 
 az ml job create --file prediction-pipeline.yml
+
+az ml component create --file datacheck.yml --tags.git-sha=123456
