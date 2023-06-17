@@ -9,7 +9,7 @@ settings:
 
 inputs:
   random_seed: 42
-  train_test_split_factor: 20
+  train_test_split_factor: 21
   model_name: diabetes-prediction-model
   train_datasheet_name: patients_healthdata_1_train.csv
   test_datasheet_name: patients_healthdata_1_test.csv
@@ -17,7 +17,7 @@ inputs:
 jobs:
   data_check:
     type: command
-    component: azureml:data_check:1.0.2
+    component: azureml:data_check:latest
     inputs:
       data: 
         type: uri_folder
@@ -29,7 +29,7 @@ jobs:
 
   data_split:
     type: command
-    component: azureml:data_split:1.0.1
+    component: azureml:data_split:latest
     inputs:
       checked_data: 
         type: uri_folder
@@ -45,7 +45,7 @@ jobs:
 
   training:
     type: command
-    component: azureml:training:2.0.8
+    component: azureml:training:latest
     inputs:
       train_folder:
         type: uri_folder

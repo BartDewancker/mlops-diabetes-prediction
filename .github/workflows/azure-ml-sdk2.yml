@@ -48,8 +48,15 @@ env:
  
 jobs:
 
-  az-pipeline:
+  az-pipeline-job:
     runs-on: ubuntu-20.04
+
+    env:
+      RANDOM_SEED: 40
+      TRAIN_TEST_SPLIT_FACTOR: 0.20
+      TRAIN_DATASHEET_NAME: patients_healthdata_1_train.csv
+      TEST_DATASHEET_NAME: patients_healthdata_1_test.csv
+      MODEL_NAME: diabetes-prediction-model
 
     steps:
       - uses: actions/checkout@v2
@@ -91,3 +98,8 @@ jobs:
         run: az ml component create --file ${{ env.AZ_CLI_PATH }}/components/training/training.yml
                                     --version ${{ env.TRAIN_VERSION }}
                                     --set tags.git-sha=${{ env.GIT_SHA }}
+
+      - name: create job
+        run: az ml job create --file ${{ env.AZ_CLI_PATH }}/piplines/prediction-pipeline.yml
+                              --set inputs.random_seed=${{ env.RANDOM_SEED }}
+                              --set inputs.train_test_split_factor=${{ env.TRAIN_TEST_SPLIT_FACTOR }}
