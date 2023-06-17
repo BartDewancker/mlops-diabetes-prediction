@@ -10,12 +10,15 @@ on:
 env:
   CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
 
-  WORKDIR: ${{github.workspace}}
+  WORKDIR: ${{ github.workspace }}
   GIT_SHA: ${{ github.sha }} # Set the SHA to use in the code
+
+  AZ_CLI_PATH: ${{ github.workspace }}/azureml-2.0-cli
+  AZ_WORKSPACE: diabetes-prediction-v2
   
 jobs:
 
-  data-preparing:
+  data-check:
     runs-on: ubuntu-20.04
 
     env:
@@ -33,8 +36,10 @@ jobs:
       
       - name: set default workspace
         continue-on-error: true  
-        run: az configure --defaults group=mlops-bart workspace=diabetes-prediction-v2
+        run: az configure --defaults group=mlops-bart workspace=${{ env.AZ_WORKSPACE }}
         
       - name: create environment
         continue-on-error: true  
-        run: az ml environment create --file azureml-2.0-cli/config/diabetes-prediction-env.yml --version ${{ env.ENV_VERSION }} --set tags.git-sha=${{ env.GIT_SHA }}
+        run: az ml environment create --file ${{ env.AZ_CLI_PATH }}/config/diabetes-prediction-env.yml
+                                      --version ${{ env.ENV_VERSION }}
+                                      --set tags.git-sha=${{ env.GIT_SHA }}
