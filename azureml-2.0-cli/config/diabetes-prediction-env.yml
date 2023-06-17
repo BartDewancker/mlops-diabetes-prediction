@@ -5,4 +5,4 @@ description: Custom environment for AI Training
 image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
 name: diabetes-prediction-env-training
 os_type: linux
-version: 1
+version: 2
