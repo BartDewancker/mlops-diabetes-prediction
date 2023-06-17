@@ -67,8 +67,8 @@ jobs:
       - name: add extension by name
         run: az extension add --name ml
 
-      # - name: azure login  
-      #   run: az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+      - name: azure login  
+        run: az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
        
       - name: set default workspace
         run: az configure --defaults group=mlops-bart workspace=${{ env.AZ_WORKSPACE }}
