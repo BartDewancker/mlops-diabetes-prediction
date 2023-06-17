@@ -20,10 +20,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Create environment
+      - name: set default workspace
         continue-on-error: true  
         run: az configure --defaults group=mlops-bart workspace=diabetes-prediction-v2
-
-
-
-
+        
+      - name: create environment
+        continue-on-error: true  
+        run: az ml environment create --file diabetes-prediction-env.yml
