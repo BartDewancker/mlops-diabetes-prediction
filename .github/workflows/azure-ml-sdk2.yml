@@ -104,7 +104,7 @@ jobs:
                               --set inputs.random_seed=${{ env.RANDOM_SEED }}
                               --set inputs.train_test_split_factor=${{ env.TRAIN_TEST_SPLIT_FACTOR }}
                               --set jobs.data_check.component=azureml:data_check:${{ env.DATA_CHECK_VERSION }}
-                              --set jobs.data_check.component=azureml:data_split:${{ env.DATA_SPLIT_VERSION }}
+                              --set jobs.data_split.component=azureml:data_split:${{ env.DATA_SPLIT_VERSION }}
                               --set jobs.training.component=azureml:training:${{ env.TRAIN_VERSION }}
 
                               
