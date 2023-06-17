@@ -17,7 +17,7 @@ inputs:
 jobs:
   data_check:
     type: command
-    component: azureml:data_check:1.0.0
+    component: azureml:data_check:1.0.3
     inputs:
       data: 
         type: uri_folder
@@ -29,7 +29,7 @@ jobs:
 
   data_split:
     type: command
-    component: azureml:data_split:1.0.0
+    component: azureml:data_split:1.0.3
     inputs:
       checked_data: 
         type: uri_folder
@@ -45,7 +45,7 @@ jobs:
 
   training:
     type: command
-    component: azureml:training:1.0.0
+    component: azureml:training:2.0.9
     inputs:
       train_folder:
         type: uri_folder

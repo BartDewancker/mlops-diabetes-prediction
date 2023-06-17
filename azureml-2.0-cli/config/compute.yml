@@ -1,5 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/computeInstance.schema.json
-name: cpu-cluster
+name: cpu-two
 size: STANDARD_F2S_V2
 type: computeinstance
 idle_time_before_shutdown: PT30M
