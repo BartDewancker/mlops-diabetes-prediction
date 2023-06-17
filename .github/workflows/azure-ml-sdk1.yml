@@ -1,4 +1,4 @@
-name: MLOps Azure Data Preparing and AI Training
+name: MLOps Azure Data Preparing and AI Training (SDK 1)
 
 # Controls when the workflow will run
 on:

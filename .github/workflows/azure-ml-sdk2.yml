@@ -1,6 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-
-name: MLOps test
+name: MLOps Azure Data Preparing and AI Training (SDK 2)
 
 # Controls when the workflow will run
 on:
@@ -31,6 +29,11 @@ on:
           type: boolean
           default: true
           required: true
+      create_job:
+        description: 'Create job for model training'
+        type: boolean
+        default: true
+        required: true
         
 env:
   WORKDIR: ${{ github.workspace }}
@@ -43,7 +46,7 @@ env:
   ENV_VERSION: 1.0.0
   DATA_CHECK_VERSION: 1.0.3
   DATA_SPLIT_VERSION: 1.0.3
-  TRAIN_VERSION: 2.09
+  TRAIN_VERSION: 2.0.9
   PIPE_VERSION: 1.0.0
  
 jobs:
@@ -100,6 +103,7 @@ jobs:
                                     --set tags.git-sha=${{ env.GIT_SHA }}
 
       - name: create job
+        if: inputs.create_job
         run: az ml job create --file ${{ env.AZ_CLI_PATH }}/pipelines/prediction-pipeline.yml
                               --set inputs.random_seed=${{ env.RANDOM_SEED }}
                               --set inputs.train_test_split_factor=${{ env.TRAIN_TEST_SPLIT_FACTOR }}

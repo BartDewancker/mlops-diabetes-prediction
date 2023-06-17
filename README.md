@@ -64,5 +64,3 @@ az ml component create --file datasplit.yml
 az ml component create --file training.yml
 
 az ml job create --file prediction-pipeline.yml
-
-az ml component create --file datacheck.yml --tags.git-sha=123456
