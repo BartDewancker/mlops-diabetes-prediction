@@ -22,13 +22,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Azure CLI script
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.30.0
-          inlineScript: |
-            az extension add -n ml
-            az ml -h
+      - name: setup python
+        uses: actions/setup-python@v2
+        with: 
+          python-version: "3.8"
+
+      - name: pip install
+        run: pip install azureml-core
 
       - name: azure login  
         run: az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
