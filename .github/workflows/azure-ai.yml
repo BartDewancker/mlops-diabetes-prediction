@@ -81,9 +81,8 @@ jobs:
       RANDOM_SEED: 42
       TRAIN_TEST_SPLIT_FACTOR: 0.20
   
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-out the repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: 'Set up python'
@@ -96,10 +95,6 @@ jobs:
         run: pip install -r requirements.txt
         working-directory: ${{ env.WORKDIR }}
 
-      - name: 'Print working directory'
-        run: |
-           echo "Working directory: ${{ env.WORKDIR }}"
-          
       - name: 'Run data prep script'
         id: dataprep
         working-directory: ${{ env.WORKDIR }}

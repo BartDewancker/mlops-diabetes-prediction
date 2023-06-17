@@ -4,47 +4,25 @@ name: MLOps test
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events
- 
-
   workflow_dispatch:
    
   
 env:
- 
-  WORKDIR: azureml-1.0-automation
+  WORKDIR: ${{github.workspace}}
   GIT_SHA: ${{ github.sha }} # Set the SHA to use in the code
   
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  docker-pull-and-deploy:
-  
-    runs-on: self-hosted
-
+  data-preparing:
+    runs-on: ubuntu-20.04 # Because of issues with dotnet, we downgraded this one
+   
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      # - name: Create namespace
-      #   continue-on-error: true  
-      #   run: kubectl create namespace bartdewa-animals
-
-      # - name: Start deployment
-      #   env:
-      #     GIT_SHA2: sha-${{ github.sha }} # Set the SHA to use in the code
-      #     TAG: sha-${GIT_SHA2:0:8}
-      
-      #   # run: helm upgrade --install animals ./helm
-      #   run: helm upgrade --install animals ./helm --set image.tag=sha-73ffa86
-      #   working-directory: ${{ env.WORKDIR }}
-
-      - name: Get short SHA
-        run: echo "SHORT_SHA=sha-$("${{ github.sha }}".SubString(0, 7))" >> $env:GITHUB_ENV
-
-      - name: Print short SHA
-        run: echo "Short SHA is ${{ env.SHORT_SHA }}"
+      - name: Create environment
+        continue-on-error: true  
+        run: az configure --defaults group=mlops-bart workspace=diabetes-prediction-v2
 
 
 
