@@ -100,6 +100,6 @@ jobs:
                                     --set tags.git-sha=${{ env.GIT_SHA }}
 
       - name: create job
-        run: az ml job create --file ${{ env.AZ_CLI_PATH }}/piplines/prediction-pipeline.yml
+        run: az ml job create --file ${{ env.AZ_CLI_PATH }}/pipelines/prediction-pipeline.yml
                               --set inputs.random_seed=${{ env.RANDOM_SEED }}
                               --set inputs.train_test_split_factor=${{ env.TRAIN_TEST_SPLIT_FACTOR }}
