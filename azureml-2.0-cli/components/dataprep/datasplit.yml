@@ -5,10 +5,10 @@ name: data_split
 is_deterministic: true
 description: Reads the datasheets content and split them into train and test
 display_name: Data Splitting to Train and Test
-# Let this be overridden
-version: 1.0.1
+
+version: 1.0.0
 tags:
-  git-sha: 1234567890abcdef
+  git-sha: 012a
   git-branch: main
 
 code: ./src
