@@ -10,7 +10,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checked_data", type=str, help="input path to checked datasheets")
     parser.add_argument("--random_seed", type=int, help="random seed factor")
-    parser.add_argument("--split_size", type=int, help="train test split factor")
+    parser.add_argument("--split_size", type=float, help="train test split factor")
     parser.add_argument("--train_data", type=str, help="output path for train datasheets")
     parser.add_argument("--test_data", type=str, help="output path for test datasheets")
     args = parser.parse_args()

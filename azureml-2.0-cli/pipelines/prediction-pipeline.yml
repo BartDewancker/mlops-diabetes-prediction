@@ -9,7 +9,7 @@ settings:
 
 inputs:
   random_seed: 42
-  train_test_split_factor: 21
+  train_test_split_factor: 0.21
   model_name: diabetes-prediction-model
   train_datasheet_name: patients_healthdata_1_train.csv
   test_datasheet_name: patients_healthdata_1_test.csv
