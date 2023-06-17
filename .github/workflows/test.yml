@@ -81,7 +81,7 @@ jobs:
                                     --set tags.git-sha=${{ env.GIT_SHA }}
                             
       - name: create component for data split
-        if: inputs.create_data_check
+        if: inputs.create_data_split
         run: az ml component create --file ${{ env.AZ_CLI_PATH }}/components/dataprep/datasplit.yml
                                     --version ${{ env.DATA_SPLIT_VERSION }}
                                     --set tags.git-sha=${{ env.GIT_SHA }}
