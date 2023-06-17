@@ -1,0 +1,50 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+
+type: command
+name: training
+is_deterministic: true
+description: Trains an AI model by inputting a lot of training and testing data.
+display_name: Training an AI model
+# Let this be overridden
+version: 2.0.8
+tags:
+  git-sha: 1234567890abcdef
+  git-branch: main
+
+code: ./src
+
+command: 'python train.py --train_folder ${{inputs.train_folder}}
+                          --test_folder ${{inputs.test_folder}}
+                          --train_datasheet ${{inputs.train_datasheet}}
+                          --test_datasheet ${{inputs.test_datasheet}}
+                          --model_name ${{inputs.model_name}}
+                          --output_folder ${{outputs.output_folder}}'
+                          
+
+# We need to find a way to automatically use the latest version here
+environment: azureml:diabetes-prediction-env-training:1
+
+inputs:
+  train_folder:
+    optional: false
+    type: uri_folder
+  test_folder:
+    optional: false
+    type: uri_folder
+  train_datasheet:
+    optional: false
+    type: string
+  test_datasheet:
+    optional: false
+    type: string
+  model_name:
+    optional: false
+    type: string
+
+outputs:
+  output_folder:
+    type: uri_folder
+
+resources:
+  instance_count: 1
+

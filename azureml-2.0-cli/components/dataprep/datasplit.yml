@@ -1,0 +1,44 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+
+type: command
+name: data_split
+is_deterministic: true
+description: Reads the datasheets content and split them into train and test
+display_name: Data Splitting to Train and Test
+# Let this be overridden
+version: 1.0.1
+tags:
+  git-sha: 1234567890abcdef
+  git-branch: main
+
+code: ./src
+
+command: "python datasplit.py --checked_data ${{inputs.checked_data}}
+                              --random_seed ${{inputs.random_seed}}
+                              --split_size ${{inputs.train_test_split_factor}}
+                              --train_data ${{outputs.train_data}} 
+                              --test_data ${{outputs.test_data}}"
+
+# We need to find a way to automatically use the latest version here
+environment: azureml:diabetes-prediction-env-training:1
+
+inputs:
+  checked_data:
+    type: uri_folder
+    optional: False
+  random_seed:
+    type: number
+    optional: False
+  train_test_split_factor:
+    type: number
+    optional: False
+
+outputs:
+  train_data:
+    type: uri_folder
+  test_data:
+    type: uri_folder
+
+resources:
+  instance_count: 1
+

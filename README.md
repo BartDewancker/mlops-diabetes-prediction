@@ -49,3 +49,18 @@ token:
 AYTVNIY7JMBBIP2PTIKJSX3ERMXHI
 
 C:\actions-runner\run.cmd
+
+# SDK2
+
+az login
+
+az configure --defaults group=mlops-bart workspace=diabetes-prediction-v2
+
+az ml compute create --file compute.yml
+az ml environment create --file diabetes-prediction-env.yml
+
+az ml component create --file datacheck.yml
+az ml component create --file datasplit.yml
+az ml component create --file training.yml
+
+az ml job create --file prediction-pipeline.yml

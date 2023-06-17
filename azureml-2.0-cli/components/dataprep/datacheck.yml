@@ -1,0 +1,31 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+
+type: command
+name: data_check
+is_deterministic: true
+description: Check the datasheets content
+display_name: Data Check
+# Let this be overridden
+version: 1.0.2
+tags:
+  git-sha: 1234567890abcdef
+  git-branch: main
+
+code: ./src
+
+command: "python datacheck.py --raw_data ${{inputs.data}} --checked_data ${{outputs.output_data}}"
+
+# We need to find a way to automatically use the latest version here
+environment: azureml:diabetes-prediction-env-training:1
+
+inputs:
+  data:
+    type: uri_folder
+    optional: False
+outputs:
+  output_data:
+    type: uri_folder
+
+resources:
+  instance_count: 1
+

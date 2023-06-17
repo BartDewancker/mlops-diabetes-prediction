@@ -1,0 +1,76 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+
+display_name: Diabetes Prediction Pipeline
+description: Pipeline for training a model to predict diabetes.
+
+settings:
+  default_compute: azureml:cpu-one
+
+inputs:
+  random_seed: 42
+  train_test_split_factor: 20
+  model_name: diabetes-prediction-model
+  train_datasheet_name: patients_healthdata_1_train.csv
+  test_datasheet_name: patients_healthdata_1_test.csv
+
+jobs:
+  data_check:
+    type: command
+    component: azureml:data_check:1.0.2
+    inputs:
+      data: 
+        type: uri_folder
+        path: azureml:patients_healthdata:1
+
+    outputs:
+      output_data: 
+        mode: rw_mount
+
+  data_split:
+    type: command
+    component: azureml:data_split:1.0.1
+    inputs:
+      checked_data: 
+        type: uri_folder
+        path: ${{parent.jobs.data_check.outputs.output_data}}
+      random_seed: ${{parent.inputs.random_seed}}
+      train_test_split_factor: ${{parent.inputs.train_test_split_factor}}
+
+    outputs:
+      train_data: 
+        mode: rw_mount
+      test_data: 
+        mode: rw_mount
+
+  training:
+    type: command
+    component: azureml:training:2.0.8
+    inputs:
+      train_folder:
+        type: uri_folder
+        path: ${{parent.jobs.data_split.outputs.train_data}}
+      test_folder: 
+        type: uri_folder
+        path: ${{parent.jobs.data_split.outputs.test_data}}
+      train_datasheet: ${{parent.inputs.train_datasheet_name}}
+      test_datasheet: ${{parent.inputs.test_datasheet_name}}
+      model_name: ${{parent.inputs.model_name}}
+
+    outputs:
+      output_folder: 
+        mode: rw_mount
+
+  model_registration:
+    type: command
+    component: azureml://registries/azureml/components/register_model/versions/0.0.2
+    inputs:
+      model_path: 
+        type: uri_folder
+        path: ${{parent.jobs.training.outputs.output_folder}}
+      model_name: ${{parent.inputs.model_name}}
+      model_type: custom_model
+      
+    outputs:
+      registration_details: 
+        type: uri_file
