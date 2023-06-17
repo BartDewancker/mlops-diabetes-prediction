@@ -8,6 +8,8 @@ on:
    
   
 env:
+  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+
   WORKDIR: ${{github.workspace}}
   GIT_SHA: ${{ github.sha }} # Set the SHA to use in the code
   
@@ -20,6 +22,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: azure login  
+        run: az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+      
       - name: set default workspace
         continue-on-error: true  
         run: az configure --defaults group=mlops-bart workspace=diabetes-prediction-v2
