@@ -42,8 +42,8 @@ env:
 
   ENV_VERSION: 1.0.0
   DATA_CHECK_VERSION: 1.0.3
-  DATA_SPLIT_VERSION: 1.0.0
-  TRAIN_VERSION: 1.0.0
+  DATA_SPLIT_VERSION: 1.0.2
+  TRAIN_VERSION: 2.09
   PIPE_VERSION: 1.0.0
  
 jobs:
@@ -78,4 +78,16 @@ jobs:
         if: inputs.create_data_check
         run: az ml component create --file ${{ env.AZ_CLI_PATH }}/components/dataprep/datacheck.yml
                                     --version ${{ env.DATA_CHECK_VERSION }}
+                                    --set tags.git-sha=${{ env.GIT_SHA }}
+                            
+      - name: create component for data split
+        if: inputs.create_data_check
+        run: az ml component create --file ${{ env.AZ_CLI_PATH }}/components/dataprep/datasplit.yml
+                                    --version ${{ env.DATA_SPLIT_VERSION }}
+                                    --set tags.git-sha=${{ env.GIT_SHA }}
+                                  
+      - name: create component for model training
+        if: inputs.create_train
+        run: az ml component create --file ${{ env.AZ_CLI_PATH }}/components/training/training.yml
+                                    --version ${{ env.TRAIN_VERSION }}
                                     --set tags.git-sha=${{ env.GIT_SHA }}
