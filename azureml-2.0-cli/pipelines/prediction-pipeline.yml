@@ -13,11 +13,14 @@ inputs:
   model_name: diabetes-prediction-model
   train_datasheet_name: patients_healthdata_1_train.csv
   test_datasheet_name: patients_healthdata_1_test.csv
+  data_check_version: 1.0.0
+  data_split_version: 1.0.0
+  train_version: 1.0.0
 
 jobs:
   data_check:
     type: command
-    component: azureml:data_check:latest
+    component: azureml:data_check:${{parent.inputs.data_check_version}}
     inputs:
       data: 
         type: uri_folder
@@ -29,7 +32,7 @@ jobs:
 
   data_split:
     type: command
-    component: azureml:data_split:latest
+    component: azureml:data_split:${{parent.inputs.data_split_version}}
     inputs:
       checked_data: 
         type: uri_folder
@@ -45,7 +48,7 @@ jobs:
 
   training:
     type: command
-    component: azureml:training:latest
+    component: azureml:training:${{parent.inputs.data_train_version}}
     inputs:
       train_folder:
         type: uri_folder
