@@ -22,6 +22,16 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: 'Set up python'
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+          cache: 'pip'
+      
+      - name: 'install requirements'
+        run: pip install -r requirements.txt
+        working-directory: ${{ env.WORKDIR }}
+
       - name: azure login  
         run: az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
       
@@ -31,4 +41,4 @@ jobs:
         
       - name: create environment
         continue-on-error: true  
-        run: az ml environment create --file diabetes-prediction-env.yml
+        run: az ml environment create --file azureml-2.0-cli/config/diabetes-prediction-env.yml
