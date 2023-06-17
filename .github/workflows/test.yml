@@ -18,14 +18,10 @@ env:
   
 jobs:
 
-  data-check:
+  az-login:
     runs-on: ubuntu-20.04
 
-    env:
-      ENV_VERSION: 1.0.0
-    
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: add extension by name
@@ -38,6 +34,15 @@ jobs:
         continue-on-error: true  
         run: az configure --defaults group=mlops-bart workspace=${{ env.AZ_WORKSPACE }}
         
+  data-check:
+    runs-on: ubuntu-20.04
+
+    env:
+      ENV_VERSION: 1.0.1
+    
+    steps:
+      - uses: actions/checkout@v2
+
       - name: create environment
         continue-on-error: true  
         run: az ml environment create --file ${{ env.AZ_CLI_PATH }}/config/diabetes-prediction-env.yml
