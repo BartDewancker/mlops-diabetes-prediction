@@ -34,4 +34,4 @@ jobs:
         
       - name: create environment
         continue-on-error: true  
-        run: az ml environment create --file azureml-2.0-cli/config/diabetes-prediction-env.yml --version 3 --set tags.git-sha=${{ env.GIT_SHA }}
+        run: az ml environment create --file azureml-2.0-cli/config/diabetes-prediction-env.yml --version auto --set tags.git-sha=${{ env.GIT_SHA }}
