@@ -60,7 +60,9 @@ env:
   SUBSCRIPTION_ID: 412afafd-c7eb-488d-b2fc-cc920cc0087a
 
   MODEL_NAME: diabetes-prediction-model
-  MODEL_VERSION: v1
+  MODEL_VERSION: v8
+  MODEL_C_VALUE: 0.5
+  MODEL_MAX_ITER: 1000
 
   RAW_DATASET_NAME: patients_healthdata
   CHECKED_DATASET_NAME: patients_healthdata_checked
@@ -268,7 +270,7 @@ jobs:
       - name: Start deployment
         run: helm upgrade --install diabetes-prediction ./helm
                           --set image.tag=${{ env.SHORT_SHA }}
-                          --set app.name=${{ env.NAME_SPACE }}-app
+                          --set app.name=${{ env.NAME_SPACE }}-v${{ env.API_VERSION }}
                           --set app.version=${{ env.API_VERSION }}
                           --set app.modelVersion=${{ env.MODEL_VERSION }} -n ${{ env.NAME_SPACE }}
         working-directory: ${{ env.WORKDIR }}

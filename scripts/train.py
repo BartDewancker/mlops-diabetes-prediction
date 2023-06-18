@@ -20,6 +20,8 @@ parser.add_argument('--test-folder', type=str, dest='test_folder', help='Test fo
 parser.add_argument('--train-datasheet', type=str, dest='train_datasheet', help='Name of train datasheet.')
 parser.add_argument('--test-datasheet', type=str, dest='test_datasheet', help='Name of test datasheet.')
 parser.add_argument('--model-name', type=str, dest='model_name', help='The name of the model to use.')
+parser.add_argument('--classifier-c', type=str, dest='classifier_c', help='C value for the model.')
+parser.add_argument('--classifier-max-iter', type=str, dest='classifier_max_iter', help='Maximum interations for the model.')
 parser.add_argument('--git-sha', type=str, dest='git_sha', help='Commit ID on github.')
 args = parser.parse_args()
 
@@ -94,26 +96,18 @@ if(not df_train.empty and not df_test.empty):
         ('classifier', LogisticRegression())
     ])
 
-    # # configure model
-    # model.set_params(
-    #     classifier__C=10, 
-    #     classifier__solver='liblinear', 
-    #     classifier__max_iter=1000, 
-    #     classifier__class_weight='balanced',
-    #     preprocessor__num__scaler__with_mean=True)
-
     # print
     model
 
-    c = 0.5
-    solver = 'liblinear'
-    # class_weight = {'class_label': 'balanced'}
-
     # configure model
+    print(f'Set parameters:\n')
+    print(f'C: {args.classifier_c}\n')
+    print(f'max interation: {args.classifier_max_iter}\n')
+          
     model.set_params(
-        classifier__C=c,
-        classifier__solver=solver,
-        classifier__max_iter=1000,
+        classifier__C=args.classifier_c,
+        classifier__solver='liblinear',
+        classifier__max_iter=args.classifier_max_iter,
         classifier__class_weight='balanced',
         preprocessor__num__scaler__with_mean=False)
 
@@ -131,25 +125,27 @@ if(not df_train.empty and not df_test.empty):
     y_pred_proba = model.predict_proba(X_test)[:, 1]
 
     # evaluate the model
+    run.log('git-sha', args.git_sha)
 
     # 1. accuracy score
-
-    accuracy =accuracy_score(y_test, y_pred)
+    accuracy = accuracy_score(y_test, y_pred)
     run.log('Accuracy score', accuracy)
-
-    print(f'Accuracy score: {accuracy_score(y_test, y_pred):.4f}')
-
-    cf_matrix = confusion_matrix(y_test, y_pred)
-    run.log('confusion matrix', cf_matrix)
+    print(f'Accuracy score: {accuracy:.4f}')
 
     # 2. confusion matrix
-    print(f'Confusion matrix: \n{confusion_matrix(y_test, y_pred)}')
+    cf_matrix = confusion_matrix(y_test, y_pred)
+    run.log('confusion matrix', cf_matrix)
+    print(f'Confusion matrix: \n{cf_matrix}')
 
     # 3. ROC AUC score
-    print(f'ROC AUC score: {roc_auc_score(y_test, y_pred_proba):.4f}')
+    roc_auc = roc_auc_score(y_test, y_pred_proba)
+    run.log('ROC AUC score', roc_auc)
+    print(f'ROC AUC score: {roc_auc:.4f}')
 
     # 4. classification report
-    print(f'Classification report: \n{classification_report(y_test, y_pred)}')
+    report = classification_report(y_test, y_pred)
+    run.log('Classification report', report)
+    print(f'Classification report: \n{report}')
 
 
 # Create an output directory where our AI model will be saved to.
@@ -165,5 +161,3 @@ joblib.dump(value=model, filename=model_filename)
 print(f"Model saved at {model_filename}")
 
 print("DONE TRAINING")
-
-run.log('git-sha', args.git_sha)

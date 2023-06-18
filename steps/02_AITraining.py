@@ -16,6 +16,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MODEL_NAME = os.environ.get('MODEL_NAME')
+MODEL_C_VALUE = os.environ.get('MODEL_C_VALUE')
+MODEL_MAX_ITER = os.environ.get('MODEL_MAX_ITER')
 TRAIN_DATASET = os.environ.get('TRAIN_DATASET_NAME')
 TEST_DATASET = os.environ.get('TEST_DATASET_NAME')
 TRAIN_DATASHEET = os.environ.get('TRAIN_DATASHEET_NAME')
@@ -89,6 +91,8 @@ def prepareTraining(ws, env, compute_target) -> Tuple[Experiment, ScriptRunConfi
     '--train-datasheet', TRAIN_DATASHEET,
     '--test-datasheet', TEST_DATASHEET,
     '--model-name', MODEL_NAME,
+    '--classifier-c', MODEL_C_VALUE,
+    '--classifier-max-iter', MODEL_MAX_ITER,
     '--git-sha', GIT_SHA]
 
     script_run_config = ScriptRunConfig(source_directory=SCRIPTFOLDER, script='train.py', arguments=args,
