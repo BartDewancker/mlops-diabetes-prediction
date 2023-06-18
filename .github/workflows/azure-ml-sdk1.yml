@@ -198,7 +198,6 @@ jobs:
         always() &&
         (needs.data-preparing.result == 'success' || needs.data-preparing.result == 'skipped') &&
         (needs.ai-training.result == 'success' || needs.ai-training.result == 'skipped') &&
-        (needs.api-creation.result == 'success' || needs.api-creation.result == 'skipped') &&
         inputs.api_creation
       }}
     runs-on: ubuntu-latest
