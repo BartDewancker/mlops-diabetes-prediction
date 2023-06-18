@@ -1,15 +1,14 @@
 # nodeport-service.yml
-apiVersion: {{ .Values.api.version }}
+apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "example.fullname" . }}
   labels:
 {{ include "example.labels" . | indent 4 }}
-  namespace: {{ .Values.namespace }}
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ .Values.api.name }}
+    app: {{ .Values.app.name }}
   ports:
     - protocol: TCP
       port: {{ .Values.service.port }}

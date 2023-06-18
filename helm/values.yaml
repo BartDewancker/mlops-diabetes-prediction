@@ -2,10 +2,11 @@ replicaCount: 1
 
 namespace: default
 
-api:
-  name: diabetes-prediction-api
-  version: v1
-
+app:
+  name: diabetes-prediction-app
+  version: v1.0.0
+  modelVersion: v1
+  
 image:
   repository: docker.io/bartdewa/diabetes-prediction
   tag: v1

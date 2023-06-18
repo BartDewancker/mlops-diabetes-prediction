@@ -2,8 +2,8 @@
 apiVersion: v1
 appVersion: "1.0"
 description: A Helm chart for Kubernetes
-name: api
-version: 0.1.0
+name: ml-api
+version: 1.0.0
 maintainers:
   - name: Bart Dewancker
     email: bart.dewancker@araani.com

@@ -65,7 +65,7 @@ def read_root():
     """
     Read root
     """
-    return {"Hello": "Diabetes Prediction API: version " + VERSION + " is running."}
+    return {"Hello": "Diabetes Prediction API"}
 
 @app.post("/patient",
     description="Predict if a patient is about to have diabetes.",

@@ -4,16 +4,18 @@ metadata:
   name: {{ include "example.fullname" . }}
   labels:
 {{ include "example.labels" . | indent 4 }}
-  namespace: {{ .Values.namespace }}
+    app: {{ .Values.app.name }}
+    version: {{ .Values.app.version }}
+    modelVersion: {{ .Values.app.modelVersion }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.api.name }}
+      app: {{ .Values.app.name }}
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ .Values.api.name }}
+        app: {{ .Values.app.name }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
