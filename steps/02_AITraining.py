@@ -88,7 +88,8 @@ def prepareTraining(ws, env, compute_target) -> Tuple[Experiment, ScriptRunConfi
     '--test-folder', test_dataset.as_download('./processed_data/test'),
     '--train-datasheet', TRAIN_DATASHEET,
     '--test-datasheet', TEST_DATASHEET,
-    '--model-name', MODEL_NAME]
+    '--model-name', MODEL_NAME
+    '--git-sha', GIT_SHA]
 
     script_run_config = ScriptRunConfig(source_directory=SCRIPTFOLDER, script='train.py', arguments=args,
                                         compute_target=compute_target, environment=env)

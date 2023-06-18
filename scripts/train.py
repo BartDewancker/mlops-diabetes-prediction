@@ -20,6 +20,7 @@ parser.add_argument('--test-folder', type=str, dest='test_folder', help='Test fo
 parser.add_argument('--train-datasheet', type=str, dest='train_datasheet', help='Name of train datasheet.')
 parser.add_argument('--test-datasheet', type=str, dest='test_datasheet', help='Name of test datasheet.')
 parser.add_argument('--model-name', type=str, dest='model_name', help='The name of the model to use.')
+parser.add_argument('--git-sha', type=str, dest='git_sha', help='Commit ID on github.')
 args = parser.parse_args()
 
 # As we're mounting the train_folder and test_folder onto the `/mnt/data` directories, we can load in the datasheets by using glob.
@@ -135,7 +136,11 @@ if(not df_train.empty and not df_test.empty):
 
     accuracy =accuracy_score(y_test, y_pred)
     run.log('Accuracy score', accuracy)
+
     print(f'Accuracy score: {accuracy_score(y_test, y_pred):.4f}')
+
+    cf_matrix = confusion_matrix(y_test, y_pred)
+    run.log('confusion matrix', cf_matrix)
 
     # 2. confusion matrix
     print(f'Confusion matrix: \n{confusion_matrix(y_test, y_pred)}')
@@ -160,3 +165,5 @@ joblib.dump(value=model, filename=model_filename)
 print(f"Model saved at {model_filename}")
 
 print("DONE TRAINING")
+
+run.log('git-sha', args.git_sha)

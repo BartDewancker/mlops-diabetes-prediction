@@ -1,5 +1,9 @@
 replicaCount: 1
 
+api:
+  name: diabetes-prediction-api
+  version: v1
+
 image:
   repository: docker.io/bartdewa/diabetes-prediction
   tag: v1

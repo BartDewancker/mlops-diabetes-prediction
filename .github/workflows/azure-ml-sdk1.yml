@@ -60,12 +60,14 @@ env:
   SUBSCRIPTION_ID: 412afafd-c7eb-488d-b2fc-cc920cc0087a
 
   MODEL_NAME: diabetes-prediction-model
+  MODEL_VERSION: 1
 
   RAW_DATASET_NAME: patients_healthdata
   CHECKED_DATASET_NAME: patients_healthdata_checked
   TRAIN_DATASET_NAME: patients_healthdata_train
   TEST_DATASET_NAME: patients_healthdata_test
   DATASET_VERSION: 1
+  API_VERSION: 1.0.0
 
   WORKDIR: ${{github.workspace}}
   GIT_SHA: ${{ github.sha }} # Set the SHA to use in the code
@@ -265,7 +267,11 @@ jobs:
         run: echo "Short SHA is ${{ env.SHORT_SHA }}"
                        
       - name: Start deployment
-        run: helm upgrade --install diabetes-prediction ./helm --set image.tag=${{ env.SHORT_SHA }} -n ${{ env.NAME_SPACE }}
+        run: helm upgrade --install diabetes-prediction ./helm
+                          --set image.tag=${{ env.SHORT_SHA }}
+                          --set api.name=${{ env.NAME_SPACE }}-api
+                          --set api.version=${{ env.API_VERSION }}
+                          -n ${{ env.NAME_SPACE }}
         working-directory: ${{ env.WORKDIR }}
 
 

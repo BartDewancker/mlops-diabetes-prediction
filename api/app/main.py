@@ -11,6 +11,8 @@ from schemas import Patient
 
 load_dotenv()
 
+VERSION = os.environ.get('API_VERSION')
+
 app = FastAPI()
 
 app.add_middleware(
@@ -63,7 +65,7 @@ def read_root():
     """
     Read root
     """
-    return {"Hello": "Diabetes Prediction API"}
+    return {"Hello": "Diabetes Prediction API: version " + VERSION + " is running."}
 
 @app.post("/patient",
     description="Predict if a patient is about to have diabetes.",

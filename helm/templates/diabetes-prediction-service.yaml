@@ -1,15 +1,14 @@
 # nodeport-service.yml
-apiVersion: v1
+apiVersion: {{ .Values.api.version }}
 kind: Service
 metadata:
   name: {{ include "example.fullname" . }}
   labels:
 {{ include "example.labels" . | indent 4 }}
-  namespace: diabetes-prediction
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ .Release.Name }}
+    app: {{ .Values.api.name }}
   ports:
     - protocol: TCP
       port: {{ .Values.service.port }}

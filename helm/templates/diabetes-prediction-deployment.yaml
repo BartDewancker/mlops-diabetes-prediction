@@ -4,16 +4,15 @@ metadata:
   name: {{ include "example.fullname" . }}
   labels:
 {{ include "example.labels" . | indent 4 }}
-  namespace: diabetes-prediction
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Values.api.name }}
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Values.api.name }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
