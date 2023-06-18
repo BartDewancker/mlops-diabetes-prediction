@@ -4,6 +4,7 @@ metadata:
   name: {{ include "example.fullname" . }}
   labels:
 {{ include "example.labels" . | indent 4 }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
