@@ -270,7 +270,7 @@ jobs:
                           --set image.tag=${{ env.SHORT_SHA }}
                           --set api.name=${{ env.NAME_SPACE }}-api
                           --set api.version=${{ env.API_VERSION }}
-                          -n ${{ env.NAME_SPACE }}
+                          --set namespace=${{ env.NAME_SPACE }}
         working-directory: ${{ env.WORKDIR }}
 
 
