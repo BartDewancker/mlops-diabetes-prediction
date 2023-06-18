@@ -60,7 +60,7 @@ env:
   SUBSCRIPTION_ID: 412afafd-c7eb-488d-b2fc-cc920cc0087a
 
   MODEL_NAME: diabetes-prediction-model
-  MODEL_VERSION: v8
+  MODEL_VERSION: v10
   MODEL_C_VALUE: 0.5
   MODEL_MAX_ITER: 1000
 
