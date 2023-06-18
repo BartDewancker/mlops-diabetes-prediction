@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MODEL_NAME = os.environ.get('MODEL_NAME')
-MODEL_C_VALUE = os.environ.get('MODEL_C_VALUE')
-MODEL_MAX_ITER = os.environ.get('MODEL_MAX_ITER')
+MODEL_C_VALUE = float(os.environ.get('MODEL_C_VALUE'))
+MODEL_MAX_ITER = int(os.environ.get('MODEL_MAX_ITER'))
 TRAIN_DATASET = os.environ.get('TRAIN_DATASET_NAME')
 TEST_DATASET = os.environ.get('TEST_DATASET_NAME')
 TRAIN_DATASHEET = os.environ.get('TRAIN_DATASHEET_NAME')

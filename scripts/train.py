@@ -20,8 +20,8 @@ parser.add_argument('--test-folder', type=str, dest='test_folder', help='Test fo
 parser.add_argument('--train-datasheet', type=str, dest='train_datasheet', help='Name of train datasheet.')
 parser.add_argument('--test-datasheet', type=str, dest='test_datasheet', help='Name of test datasheet.')
 parser.add_argument('--model-name', type=str, dest='model_name', help='The name of the model to use.')
-parser.add_argument('--classifier-c', type=str, dest='classifier_c', help='C value for the model.')
-parser.add_argument('--classifier-max-iter', type=str, dest='classifier_max_iter', help='Maximum interations for the model.')
+parser.add_argument('--classifier-c', type=float, dest='classifier_c', help='C value for the model.')
+parser.add_argument('--classifier-max-iter', type=int, dest='classifier_max_iter', help='Maximum interations for the model.')
 parser.add_argument('--git-sha', type=str, dest='git_sha', help='Commit ID on github.')
 args = parser.parse_args()
 
@@ -110,7 +110,7 @@ if(not df_train.empty and not df_test.empty):
         classifier__max_iter=args.classifier_max_iter,
         classifier__class_weight='balanced',
         preprocessor__num__scaler__with_mean=False)
-
+    
     target = 'diabetes'
 
     # fit the model
