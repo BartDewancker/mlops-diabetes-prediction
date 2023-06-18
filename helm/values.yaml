@@ -1,5 +1,7 @@
 replicaCount: 1
 
+namespace: default
+
 api:
   name: diabetes-prediction-api
   version: v1
