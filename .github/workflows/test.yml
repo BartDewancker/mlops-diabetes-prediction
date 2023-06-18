@@ -1,0 +1,30 @@
+name: MLOps Azure Data Preparing and AI Training (SDK 2)
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+   
+ 
+jobs:
+
+  az-pipeline-job:
+    runs-on: ubuntu-20.04
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+            client-id: ${{ secrets.CLIENT_ID }}
+            tenant-id: ${{ secrets.TENANT_ID }}
+            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    
+      - name: 'Run Azure CLI commands'
+        run: |
+            az account show
+            az group list
+            pwd
+
+                              
+
