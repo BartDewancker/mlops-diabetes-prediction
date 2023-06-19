@@ -125,10 +125,10 @@ jobs:
 
 
   api-creation:
-    needs: [az-pipeline-job]
+    needs: [az-pipeline]
     if: ${{
         always() &&
-        (needs.az-pipeline-job.result == 'success' || needs.az-pipeline-job.result == 'skipped') &&
+        (needs.az-pipeline.result == 'success' || needs.az-pipeline.result == 'skipped') &&
         inputs.api_creation
       }}
     runs-on: ubuntu-latest
