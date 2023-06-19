@@ -273,6 +273,7 @@ jobs:
                           --set app.name=${{ env.NAME_SPACE }}-v${{ env.API_VERSION }}
                           --set app.version=${{ env.API_VERSION }}
                           --set app.modelVersion=${{ env.MODEL_VERSION }} -n ${{ env.NAME_SPACE }}
+                          --set git-sha=${{ github.sha }}
         working-directory: ${{ env.WORKDIR }}
 
 

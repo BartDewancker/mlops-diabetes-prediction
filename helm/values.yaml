@@ -1,6 +1,6 @@
 replicaCount: 1
 
-namespace: default
+git-sha: 1234567890abcdef
 
 app:
   name: diabetes-prediction-app

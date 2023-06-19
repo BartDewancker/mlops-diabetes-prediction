@@ -7,6 +7,7 @@ metadata:
     app: {{ .Values.app.name }}
     version: {{ .Values.app.version }}
     modelVersion: {{ .Values.app.modelVersion }}
+    git-sha: {{ .Values.app.modelVersion }}
 spec:
   selector:
     matchLabels:
