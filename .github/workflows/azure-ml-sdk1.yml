@@ -275,7 +275,7 @@ jobs:
                           --set app.name=${{ env.NAME_SPACE }}-v${{ env.API_VERSION }}
                           --set app.version=${{ env.API_VERSION }}
                           --set app.modelVersion=${{ env.MODEL_VERSION }}
-                          --set nodePort=${{ env.NODE_PORT }}
+                          --set service.nodePort=${{ env.NODE_PORT }}
                           --set replicaCount=${{ env.REPLICA_COUNT }}
                           --set git-sha=${{ github.sha }} -n ${{ env.NAME_SPACE }}
         working-directory: ${{ env.WORKDIR }}
