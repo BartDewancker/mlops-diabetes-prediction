@@ -69,8 +69,7 @@ env:
   TRAIN_DATASET_NAME: patients_healthdata_train
   TEST_DATASET_NAME: patients_healthdata_test
   DATASET_VERSION: 1
-  API_VERSION: 1.0.0
-
+ 
   WORKDIR: ${{github.workspace}}
   GIT_SHA: ${{ github.sha }} # Set the SHA to use in the code
   
@@ -251,7 +250,10 @@ jobs:
     runs-on: self-hosted
 
     env:
+      API_VERSION: 1.0.0
       NAME_SPACE: diabetes-prediction
+      NODE_PORT: 30080
+      REPLICA_COUNT: 2
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -272,8 +274,10 @@ jobs:
                           --set image.tag=${{ env.SHORT_SHA }}
                           --set app.name=${{ env.NAME_SPACE }}-v${{ env.API_VERSION }}
                           --set app.version=${{ env.API_VERSION }}
-                          --set app.modelVersion=${{ env.MODEL_VERSION }} -n ${{ env.NAME_SPACE }}
-                          --set git-sha=${{ github.sha }}
+                          --set app.modelVersion=${{ env.MODEL_VERSION }}
+                          --set nodePort=${{ env.NODE_PORT }}
+                          --set replicaCount=${{ env.REPLICA_COUNT }}
+                          --set git-sha=${{ github.sha }} -n ${{ env.NAME_SPACE }}
         working-directory: ${{ env.WORKDIR }}
 
 
